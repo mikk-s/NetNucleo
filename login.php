@@ -4,6 +4,9 @@ session_start();
 ob_start();
 
 require "conexao.php";
+include_once("templates/header.php");
+
+
 if (isset($_SESSION["usuario"])) {
     $_SESSION['login_error'] = "Já logou. Redirecionando...";
     header("Location: home.php");
@@ -42,11 +45,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 ?>
 <link rel="stylesheet" href="css/style.css">
 
+<section class="login">
+    
 
 
-<body class="login">
-
- 
     <div class="login-f">
         <form method="POST" class="login-form">
         <?php
@@ -63,7 +65,5 @@ if (isset($_SESSION["erro"])) {
         </form>    
         <p>Não tem uma conta? <a href="cadastro.php">Cadastre-se</a></p>
     </div>
-    
-    
-</body>
+    </section>
 

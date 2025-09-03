@@ -21,52 +21,54 @@ include_once("helpers/url.php");
     <script src="script.js"></script>
     <header class="site-header">
         <div class="header-container">
-            <h1 class="site-title">NETNÚCLEO - HORTO</h1>
+ <h1 class="site-title">NETNÚCLEO - HORTO</h1>
         </div>
 
-        <div class="header-menu">
+<?php if (isset($_SESSION["usuario"])): ?>
+ <div class="header-menu">
 
-            <div class="nav-left"></div>
+ <div class="nav-left"></div>
 
-            <div class="nav-center">
-                <ul>
-                    <li class="CadButton">
-                        <p>Cadastros</p>
-                        <div class="dropdown-content1">
-                            <a href="<?= $BASE_URL ?>cadastro.php">Professores</a>
-                            <a href="<?= $BASE_URL ?>cadastro_salas.php">Salas</a>
-                            <a href="<?= $BASE_URL ?>cadastro_turmas.php">Turmas</a>
-                        </div>
-                    </li>
-                    <li class="VisButton">
-                        <p>Consultas</p>
-                        <div class="dropdown-content2">
-                            <a href="<?= $BASE_URL ?>visualizar_professores.php">Professores</a>
-                            <a href="<?= $BASE_URL ?>visualizar_salas.php">Salas</a>
-                            <a href="<?= $BASE_URL ?>visualizar_turmas.php">Turmas</a>
-                            <a href="<?= $BASE_URL ?>visualizar_atividades.php">Atividades</a>
-                        </div>
-                    </li>
-                    <li class="ExButton">
-                        <p>Excluir</p>
-                        <div class="dropdown-content3">
-                            <a href="<?= $BASE_URL ?>excluir_professores.php">Excluir Professores</a>
-                            <a href="<?= $BASE_URL ?>excluir_salas.php">Excluir Salas</a>
-                            <a href="<?= $BASE_URL ?>excluir_turmas.php">Excluir Turmas</a>
-                            <a href="<?= $BASE_URL ?>excluir_atividades.php">Excluir Atividades</a>
-                        </div>
-                    </li>
-                    <li class="SairButton">
-                        <a href="<?= $BASE_URL ?>deslogar.php"> <p>Sair</p></a>
-                    </li>
-                </ul>
-            </div>
+ <div class="nav-center">
+ <ul>
+ <li class="CadButton">
+ <p>Cadastros</p>
+ <div class="dropdown-content1">
+ <a href="<?= $BASE_URL ?>cadastro.php">Professores</a>
+ <a href="<?= $BASE_URL ?>cadastro_salas.php">Salas</a>
+ <a href="<?= $BASE_URL ?>cadastro_turmas.php">Turmas</a>
+ </div>
+ </li>
+ <li class="VisButton">
+ <p>Consultas</p>
+ <div class="dropdown-content2">
+ <a href="<?= $BASE_URL ?>visualizar_professores.php">Professores</a>
+ <a href="<?= $BASE_URL ?>visualizar_salas.php">Salas</a>
+ <a href="<?= $BASE_URL ?>visualizar_turmas.php">Turmas</a>
+ <a href="<?= $BASE_URL ?>visualizar_atividades.php">Atividades</a>
+ </div>
+ </li>
+ <li class="ExButton">
+ <p>Excluir</p>
+ <div class="dropdown-content3">
+ <a href="<?= $BASE_URL ?>excluir_professores.php">Excluir Professores</a>
+ <a href="<?= $BASE_URL ?>excluir_salas.php">Excluir Salas</a>
+ <a href="<?= $BASE_URL ?>excluir_turmas.php">Excluir Turmas</a>
+ <a href="<?= $BASE_URL ?>excluir_atividades.php">Excluir Atividades</a>
+ </div>
+ </li>
+ <li class="SairButton">
+ <a href="<?= $BASE_URL ?>deslogar.php"> <p>Sair</p></a>
+ </li>
+ </ul>
+ </div>
 
-            <div class="nav-right">
-                <span class="login-status">Logado como <?=$_SESSION["usuario"]?></span>
-            </div>
+ <div class="nav-right">
+ <span class="login-status">Logado como <?=$_SESSION["usuario"]?></span>
+ </div>
 
-        </div>
+ </div>
+<?php endif; ?>
     </header>
 </body>
 </html>
