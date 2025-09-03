@@ -32,20 +32,20 @@ include_once("templates/header.php");
         </thead>
         <tbody>
             <?php
+            // Verifica se a consulta retornou resultados
             if ($resultado->num_rows > 0) {
+                // Loop para exibir cada linha de professor
                 while ($row = $resultado->fetch_assoc()) {
-                    ?>
-                    <tr>
-                        <td><?php echo $row["id"]; ?></td>
-                        <td><?php echo $row["nome"]; ?></td>
-                        <td><?php echo $row["email"]; ?></td>
-                        <td>
-                            <button class="btn btn-danger btn-sm btn-excluir" data-id="<?php echo $row["id"]; ?>">Excluir</button>
-                        </td>
-                    </tr>
-                <?php
+                    // Usando echo para imprimir a linha completa
+                    echo "<tr>";
+                    echo "<td>" . $row["id"] . "</td>";
+                    echo "<td>" . $row["nome"] . "</td>";
+                    echo "<td>" . $row["email"] . "</td>";
+                    echo "<td><button class='btn btn-danger btn-sm btn-excluir' data-id='" . $row["id"] . "'>Excluir</button></td>";
+                    echo "</tr>";
                 }
             } else {
+                // Se não houver professores no banco de dados
                 echo "<tr><td colspan='4'>Nenhum professor encontrado.</td></tr>";
             }
             ?>

@@ -42,9 +42,9 @@ include_once("helpers/url.php");
  <li class="VisButton">
  <p>Consultas</p>
  <div class="dropdown-content2">
- <a href="<?= $BASE_URL ?>consultar.php">Professores</a>
+ <a href="<?= $BASE_URL ?>consultarP.php">Professores</a>
  <a href="<?= $BASE_URL ?>consultar.php">Salas</a>
- <a href="<?= $BASE_URL ?>consultar.php">Turmas</a>
+ <a href="<?= $BASE_URL ?>consultarA.php">Turmas</a>
  </div>
  </li>
  <li class="ExButton">
