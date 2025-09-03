@@ -52,16 +52,21 @@ include_once("templates/header.php")
 ?>
 <link rel="stylesheet" href="css/style.css">
 
-<section class="login">
-    <div class="login-f">
+<main class="form-container">
+  
+    <div class="form-card"> <h2>Cadastro</h2>
+
         <form method="post">
+            <label for="nome">Nome:</label>
             <input type="text" name="nome" placeholder="Nome" required>
+            <label for="login">Login:</label>
             <input type="text" name="login" placeholder="Login" required>
+            <label for="senha">Senha:</label>
             <input type="password" name="senha" placeholder="Senha" required>
-            <input type="submit" value="Cadastrar">
+            <button type="submit" class="submit-button">Cadastrar</button>
 </form>
-    <p>Já tem uma conta? <a href="login.php">Faça login</a></p>
+    <p class="secondary-text">Já tem uma conta? <a href="login.php">Faça login</a></p>
 
     </div>
-</section>
+</main>
 </html>

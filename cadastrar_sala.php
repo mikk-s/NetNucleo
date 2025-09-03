@@ -9,8 +9,8 @@ if (!isset($_SESSION["usuario"])) {
 
 include_once("templates/header.php");
 ?>
-
-<form method="post" class="CadSala">
+<main class="form-container">
+<form method="post" class="form-card">
     <h2>Cadastrar Sala</h2>
     <label for="nome">Sala:</label>
     <input type="text" id="nome" name="n_sala" required>
@@ -39,8 +39,9 @@ include_once("templates/header.php");
         <option value="noite">Noite</option>
     </select>
     
-    <button type="submit">Cadastrar</button>
+    <button type="submit" class="submit-button">Cadastrar</button>
 </form>
+</main>
 <?php 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     include "conexao.php";

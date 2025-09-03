@@ -44,13 +44,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 ?>
 <link rel="stylesheet" href="css/style.css">
+<main class="form-container">
 
-<section class="login">
-    
-
-
-    <div class="login-f">
-        <form method="POST" class="login-form">
+    <div class="form-card" > <h2>Login</h2>
         <?php
 if (isset($_SESSION["erro"])) {
    echo "<script>alert('{$_SESSION["erro"]}');</script>";
@@ -58,12 +54,21 @@ if (isset($_SESSION["erro"])) {
     unset($_SESSION["erro"]);
 }
 ?>
+        <form method="POST">
+            
+            <label for="login">Login:</label>
+            <input type="text" id="login" name="login" required>
+            
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" required>
+            
+            <button type="submit" class="submit-button">Entrar</button>
 
-            <input type="text" name="login" placeholder="Login" required>
-            <input type="password" name="senha" placeholder="Senha" required>
-            <input type="submit" value="Login">
-        </form>    
-        <p>Não tem uma conta? <a href="cadastro.php">Cadastre-se</a></p>
+        </form>
+
+        <p class="secondary-text">
+            Não tem uma conta? <a href="cadastro.php">Cadastre-se</a>
+        </p>
+
     </div>
-    </section>
-
+</main>
