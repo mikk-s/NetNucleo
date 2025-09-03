@@ -2,7 +2,7 @@
 
 
  $host = "localhost";
- $db = "NetNucleo";
+ $db = "netnucleo";
  $user = "root";
  $pass = "";
 

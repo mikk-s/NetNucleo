@@ -1,15 +1,12 @@
+
 <?php
+session_start();
 
- $host = "localhost";
- $db = "NetNucleo";
- $user = "root";
- $pass = "";
-
-try {
-  $conn = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
-
-
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-   die("Erro de conexão: " . $e->getMessage());
+if (!isset($_SESSION["usuario"])) {
+    $_SESSION['erro'] = "Você não está logado! Por favor, faça o login.";
+    header("Location: login.php");
+    exit();
 }
+
+include_once("templates/header.php");
+?>

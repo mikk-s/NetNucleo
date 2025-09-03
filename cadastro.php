@@ -1,5 +1,5 @@
 <?php
-include_once("templates/header.php");
+;
 require "conexao.php";
 session_start(); // Certifique-se de que a sessão está iniciada
 
@@ -48,6 +48,7 @@ if (isset($_SESSION["erro"])) {
     unset($_SESSION["erro"]);
     
 }
+include_once("templates/header.php")
 ?>
 <link rel="stylesheet" href="css/style.css">
 
