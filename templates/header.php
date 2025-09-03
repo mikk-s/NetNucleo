@@ -45,7 +45,6 @@ include_once("helpers/url.php");
  <a href="<?= $BASE_URL ?>consultar.php">Professores</a>
  <a href="<?= $BASE_URL ?>consultar.php">Salas</a>
  <a href="<?= $BASE_URL ?>consultar.php">Turmas</a>
- <a href="<?= $BASE_URL ?>consultar.php">Atividades</a>
  </div>
  </li>
  <li class="ExButton">
