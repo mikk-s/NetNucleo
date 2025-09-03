@@ -1,91 +1,119 @@
 <?php
 session_start();
+require "conexao.php"; // Inclui o arquivo de conexão com o banco de dados
 
+// Verifica se o usuário está logado
 if (!isset($_SESSION["usuario"])) {
     $_SESSION['erro'] = "Você não está logado! Por favor, faça o login.";
     header("Location: login.php");
     exit();
 }
 
-include_once("templates/header.php");
-?>
-<main class="form-container">
-<form method="post" class="form-card">
-    <h2>Cadastrar Turma</h2>
-    <label for="nome">Sala:</label>
-    <input type="text" id="nome" name="n_sala" required>
-    
-    <label for="aula">Aula:</label>
-    <input type="number" id="aula" name="aula" required>
-    
-    <label for="data">Data:</label>
-    <input type="date" id="data" name="data" required>
-    
-    <label for="dia">Dia da Semana:</label>
-    <select id="dia" name="dia" required>
-        <option value="segunda">Segunda-feira</option>
-        <option value="terca">Terça-feira</option>
-        <option value="quarta">Quarta-feira</option>
-        <option value="quinta">Quinta-feira</option>
-        <option value="sexta">Sexta-feira</option>
-        <option value="sabado">Sábado</option>
-        <option value="domingo">Domingo</option>
-    </select>
-    
-    <label for="periodo">Período:</label>
-    <select id="periodo" name="periodo" required>
-        <option value="manha">Manhã</option>
-        <option value="tarde">Tarde</option>
-        <option value="noite">Noite</option>
-    </select>
-    
-    <button type="submit" class="submit-button">Cadastrar</button>
-</form>
-</main>
-<?php 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    include "conexao.php";
-        
-    $n_sala = $_POST["n_sala"];
-    $aula = $_POST["aula"];
-    $data = $_POST["data"];
-    $dia = $_POST["dia"];
-    $periodo = $_POST["periodo"];
+$erro_cadastro = "";
+$sucesso_cadastro = "";
 
-    if((isset($_POST["n_sala"])  && isset($_POST["data"]) && isset($_POST["periodo"]))) {
-        $n_sala_check = $_POST["n_sala"];
-        $data_check = $_POST["data"];
-        $periodo_check = $_POST["periodo"];
+// Verifica se o formulário foi enviado
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $n_sala = $_POST['n_sala'];
+    $aula = $_POST['aula']; // No seu formulário, 'Aula' é o campo para o professor
+    $data = $_POST['data'];
+    $dia = $_POST['dia'];
+    $periodo = $_POST['periodo'];
 
-        $check_sql = "SELECT COUNT(*) FROM salas WHERE n_sala = :n_sala AND data = :data AND periodo = :periodo";
-        $check_stmt = $conn->prepare($check_sql);
-        $check_stmt->bindParam(":n_sala", $n_sala_check);
-        $check_stmt->bindParam(":data", $data_check);
-        $check_stmt->bindParam(":periodo", $periodo_check);
-        $check_stmt->execute();
-        $count = $check_stmt->fetchColumn();
+    // Validação básica dos campos
+    if (empty($n_sala) || empty($aula) || empty($data) || empty($dia) || empty($periodo)) {
+        $erro_cadastro = "Por favor, preencha todos os campos.";
+    } else {
+        try {
+            // Prepara a query SQL para inserção
+            $stmt = $conn->prepare("INSERT INTO salas (n_sala, aula, data, dia, periodo) VALUES (:n_sala, :aula, :data, :dia, :periodo)");
 
-        if ($count > 0) {
-            echo "<script>alert('Já existe uma aula cadastrada para esta sala, dia e período.');</script>";
-            exit();
-        }
-        else {
-            $sql = "INSERT INTO salas (n_sala, aula, data, dia, periodo) VALUES (:n_sala, :aula, :data, :dia, :periodo)";
-            $stmt = $conn->prepare($sql);
-            $stmt->bindParam(":n_sala", $n_sala);
-            $stmt->bindParam(":aula", $aula);
-            $stmt->bindParam(":data", $data);
-            $stmt->bindParam(":dia", $dia);
-            $stmt->bindParam(":periodo", $periodo);
-        
-            if ($stmt->execute()) {
-                echo "<script>alert('Sala cadastrada com sucesso!');</script>";
-                exit();
-            } else {
-                echo "<script>alert('Erro ao cadastrar sala.');</script>";
-            }
+            // Bind dos parâmetros
+            $stmt->bindParam(':n_sala', $n_sala);
+            $stmt->bindParam(':aula', $aula);
+            $stmt->bindParam(':data', $data);
+            $stmt->bindParam(':dia', $dia);
+            $stmt->bindParam(':periodo', $periodo);
+
+            // Executa a query
+            $stmt->execute();
+            $sucesso_cadastro = "Aula cadastrada com sucesso!";
+
+            // Opcional: Redirecionar para a página de consulta após o cadastro
+            // header("Location: consultar_sala.php");
+            // exit();
+
+        } catch (PDOException $e) {
+            $erro_cadastro = "Erro ao cadastrar aula: " . $e->getMessage();
         }
     }
-
-
 }
+
+include_once("templates/header.php"); // Inclui o cabeçalho
+?>
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Aula</title>
+    <link rel="stylesheet" href="css/style.css"> 
+
+</head>
+<body>
+    <main class="form-container">
+        <div class="form-card">
+            <h2>Cadastrar Aula</h2>
+
+            <?php if (!empty($erro_cadastro)): ?>
+                <p style="color: red;"><?php echo $erro_cadastro; ?></p>
+            <?php endif; ?>
+            <?php if (!empty($sucesso_cadastro)): ?>
+                <p style="color: green;"><?php echo $sucesso_cadastro; ?></p>
+            <?php endif; ?>
+
+            <form action="cadastrar_aula.php" method="POST">
+                <div class="form-group">
+                    <label for="n_sala">Sala:</label>
+                    <input type="text" id="n_sala" name="n_sala" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="aula">Professor:</label>
+                    <input type="text" id="aula" name="aula" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="data">Data:</label>
+                    <input type="date" id="data" name="data" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="dia">Dia da Semana:</label>
+                    <select id="dia" name="dia" required>
+                        <option value="Segunda-feira">Segunda-feira</option>
+                        <option value="Terça-feira">Terça-feira</option>
+                        <option value="Quarta-feira">Quarta-feira</option>
+                        <option value="Quinta-feira">Quinta-feira</option>
+                        <option value="Sexta-feira">Sexta-feira</option>
+                        <option value="Sábado">Sábado</option>
+                        <option value="Domingo">Domingo</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="periodo">Período:</label>
+                    <select id="periodo" name="periodo" required>
+                        <option value="Manhã">Manhã</option>
+                        <option value="Tarde">Tarde</option>
+                        <option value="Noite">Noite</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="submit-button">Cadastrar Aula</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>
