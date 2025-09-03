@@ -36,23 +36,18 @@ include_once("helpers/url.php");
  <div class="dropdown-content1">
  <a href="<?= $BASE_URL ?>cadastro.php">Professores</a>
  <a href="<?= $BASE_URL ?>cadastrar_sala.php">Salas</a>
- <a href="<?= $BASE_URL ?>cadastrar_turma.php">Turmas</a>
+ <a href="<?= $BASE_URL ?>cadastrar_aula.php">Aulas</a>
  </div>
  </li>
- <li class="VisButton">
- <p>Consultas</p>
- <div class="dropdown-content2">
- <a href="<?= $BASE_URL ?>consultarP.php">Professores</a>
- <a href="<?= $BASE_URL ?>consultar.php">Salas</a>
- <a href="<?= $BASE_URL ?>consultarA.php">Turmas</a>
- </div>
+ <li class="SairButton">
+ <a href="<?=$BASE_URL ?>consultar.php"><p>Consultas</p></a>
  </li>
  <li class="ExButton">
  <p>Excluir</p>
  <div class="dropdown-content3">
  <a href="<?= $BASE_URL ?>excluir_professores.php">Excluir Professores</a>
  <a href="<?= $BASE_URL ?>excluir_salas.php">Excluir Salas</a>
- <a href="<?= $BASE_URL ?>excluir_turmas.php">Excluir Turmas</a>
+ <a href="<?= $BASE_URL ?>excluir_aula.php">Excluir Aulas</a>
  <a href="<?= $BASE_URL ?>excluir_atividades.php">Excluir Atividades</a>
  </div>
  </li>

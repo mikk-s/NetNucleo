@@ -16,7 +16,7 @@ include_once("templates/header.php");
     <input type="text" id="nome" name="n_sala" required>
     
     <label for="aula">Aula:</label>
-    <input type="text" id="aula" name="aula" required>
+    <input type="number" id="aula" name="aula" required>
     
     <label for="data">Data:</label>
     <input type="date" id="data" name="data" required>
