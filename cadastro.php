@@ -5,6 +5,7 @@ session_start(); // Certifique-se de que a sessão está iniciada
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $login = $_POST["login"];
     $senha = $_POST["senha"];
+    $nome = $_POST["nome"];
 
     // Verifica se usuário já existe
     $checkSql = "SELECT COUNT(*) FROM usuarios WHERE login = :login";
@@ -23,10 +24,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $senhaCriptografada = password_hash($senha, PASSWORD_DEFAULT);
 
     
-    $sql = "INSERT INTO usuarios (login, senha) VALUES (:login, :senha)";
+    $sql = "INSERT INTO usuarios (nome, login, senha) VALUES (:nome, :login, :senha)";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(":login", $login);
     $stmt->bindParam(":senha", $senhaCriptografada);
+    $stmt->bindParam(":nome", $nome);
 
     if ($stmt->execute()) {
         header("Location: login.php");
@@ -51,10 +53,12 @@ if (isset($_SESSION["erro"])) {
 <body>
     <div class="container">
         <form method="post">
+            <input type="text" name="nome" placeholder="Nome" required>
             <input type="text" name="login" placeholder="Login" required>
             <input type="password" name="senha" placeholder="Senha" required>
             <input type="submit" value="Cadastrar">
 </form>
+    <p>Já tem uma conta? <a href="login.php">Faça login</a></p>
 
     </div>
 </body>
