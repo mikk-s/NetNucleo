@@ -1,0 +1,61 @@
+<?php
+require "conexao.php";
+session_start(); // Certifique-se de que a sessão está iniciada
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $login = $_POST["login"];
+    $senha = $_POST["senha"];
+
+    // Verifica se usuário já existe
+    $checkSql = "SELECT COUNT(*) FROM usuarios WHERE login = :login";
+    $checkStmt = $conn->prepare($checkSql);
+    $checkStmt->bindParam(":login", $login);
+    $checkStmt->execute();
+    $userExists = $checkStmt->fetchColumn();
+
+    if ($userExists > 0) {
+        $_SESSION["erro"] = "Usuário já existe. Por favor, escolha outro nome de usuário.";
+        header("Location: cadastro.php");
+        exit();
+    }
+
+    
+    $senhaCriptografada = password_hash($senha, PASSWORD_DEFAULT);
+
+    
+    $sql = "INSERT INTO usuarios (login, senha) VALUES (:login, :senha)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(":login", $login);
+    $stmt->bindParam(":senha", $senhaCriptografada);
+
+    if ($stmt->execute()) {
+        header("Location: login.php");
+        exit();
+    } else {
+        $_SESSION["erro"] = "Erro ao realizar cadastro.";
+        header("Location: cadastro.php");
+        exit();
+    }
+}
+
+// Exibe mensagem de erro se existir
+// num apague meu php 
+if (isset($_SESSION["erro"])) {
+    echo "<p class='aviso-erro'>{$_SESSION["erro"]}</p>";
+    unset($_SESSION["erro"]);
+    
+}
+?>
+<link rel="stylesheet" href="css/style.css">
+
+<body>
+    <div class="container">
+        <form method="post">
+            <input type="text" name="login" placeholder="Login" required>
+            <input type="password" name="senha" placeholder="Senha" required>
+            <input type="submit" value="Cadastrar">
+</form>
+
+    </div>
+</body>
+</html>
