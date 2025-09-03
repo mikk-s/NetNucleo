@@ -1,4 +1,5 @@
 <?php
+include_once("templates/header.php");
 require "conexao.php";
 session_start(); // Certifique-se de que a sessão está iniciada
 
@@ -50,8 +51,8 @@ if (isset($_SESSION["erro"])) {
 ?>
 <link rel="stylesheet" href="css/style.css">
 
-<body>
-    <div class="container">
+<section class="login">
+    <div class="login-f">
         <form method="post">
             <input type="text" name="nome" placeholder="Nome" required>
             <input type="text" name="login" placeholder="Login" required>
@@ -61,5 +62,5 @@ if (isset($_SESSION["erro"])) {
     <p>Já tem uma conta? <a href="login.php">Faça login</a></p>
 
     </div>
-</body>
+</section>
 </html>

@@ -2,8 +2,8 @@
 session_start();
 
 if (!isset($_SESSION["usuario"])) {
-    $_SESSION['login_error'] = "Você não está logado! Por favor, faça o login.";
-    header("Location: index.php");
+    $_SESSION['erro'] = "Você não está logado! Por favor, faça o login.";
+    header("Location: login.php");
     exit();
 }
 

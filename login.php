@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if ($usuario) {
         if (password_verify($senha, $usuario["senha"])) {
-            $_SESSION["usuario"] = $usuario['login'];
+            $_SESSION["usuario"] = $usuario['nome'];
             header("Location: home.php");
             exit();
         } else {
@@ -47,11 +47,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body class="login">
 
  
-    <div class="login">
+    <div class="login-f">
         <form method="POST" class="login-form">
         <?php
 if (isset($_SESSION["erro"])) {
-    echo "<p class='aviso-erro'>{$_SESSION["erro"]}</p>";
+   echo "<script>alert('{$_SESSION["erro"]}');</script>";
+
     unset($_SESSION["erro"]);
 }
 ?>
