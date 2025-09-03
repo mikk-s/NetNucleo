@@ -1,0 +1,93 @@
+/* Estilização básica do corpo da página */
+body {
+    font-family: sans-serif;
+    margin: 0;
+}
+
+/* Container do Cabeçalho */
+.header-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Título do Site */
+.site-title {
+    font-size: 2em;
+    color: #343a40;
+    margin: 0;
+}
+
+/* Container dos Botões de Navegação */
+.header-container + div {
+    display: flex;
+    justify-content: center;
+    background-color: #e9ecef;
+    padding: 10px 0;
+}
+
+/* Lista de botões */
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+/* Estilo base dos botões */
+.CadButton, .VisButton, .ExButton, .SairButton {
+    position: relative;
+    cursor: pointer;
+   
+}
+
+.CadButton p, .VisButton p, .ExButton p , .SairButton p{
+    margin: 0;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    margin: 0 5px;
+    transition: background-color 0.3s;
+}
+.SairButton a{
+    text-decoration: none;
+}
+/* Efeito hover nos botões */
+.CadButton p:hover, .VisButton p:hover, .ExButton p:hover, .SairButton p:hover {
+    background-color: #0056b3;
+}
+
+/* Conteúdo dos Dropdowns (inicialmente escondidos) */
+.dropdown-content1, .dropdown-content2, .dropdown-content3 {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 5px;
+    overflow: hidden; /* Garante que os cantos arredondados se apliquem aos links */
+}
+
+/* Links dentro dos Dropdowns */
+.dropdown-content1 a, .dropdown-content2 a, .dropdown-content3 a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+/* Efeito hover nos links dos dropdowns */
+.dropdown-content1 a:hover, .dropdown-content2 a:hover, .dropdown-content3 a:hover {
+    background-color: #ddd;
+}
+
+/* Classe para mostrar o dropdown (adicionada via JavaScript) */
+.show {
+    display: block;
+}
