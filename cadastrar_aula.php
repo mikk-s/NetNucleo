@@ -81,7 +81,7 @@ include_once("templates/header.php"); // Inclui o cabeçalho
                     <select id="n_sala" name="n_sala" required>
                         <option value="">Selecione uma sala</option>"></option>
                     <?php
-                    $sql_salas = "SELECT n_sala, bloco FROM salas ORDER BY n_sala ASC";
+                    $sql_salas = "SELECT n_sala, bloco FROM salas ORDER BY bloco ASC";
 
                     $resultado_salas = $conn->query($sql_salas);
                      if ($resultado_salas->rowCount() > 0) {
@@ -103,25 +103,27 @@ include_once("templates/header.php"); // Inclui o cabeçalho
                 <input type="text" id="disciplina" name="disciplina" required>
             </div>
 
-                <div class="form-group">
+                 <div class="form-group">
                     <label for="professor">Professor:</label>
                     <select id="professor" name="professor" required>
                         <option value="">Selecione um professor</option>
-                    <?php
-                    $sql_prof = "SELECT nome FROM usuarios ORDER BY nome ASC";
-
-                    $resultado_prof = $conn->query($sql_prof);
-                     if ($resultado_prof->rowCount() > 0) {
-                          
-                            while($prof = $resultado_prof->fetch(PDO::FETCH_ASSOC)) {
-                              
-                                echo "<option value=''>" . htmlspecialchars($prof['nome']) . "</option>";
+                        <?php
+                        try {
+                            $sql_prof = "SELECT nome FROM usuarios ORDER BY nome ASC";
+                            $resultado_prof = $conn->query($sql_prof);
+                            if ($resultado_prof->rowCount() > 0) {
+                                while($prof = $resultado_prof->fetch(PDO::FETCH_ASSOC)) {
+                                  
+                                    echo "<option value='" . htmlspecialchars($prof['nome']) . "'>" . htmlspecialchars($prof['nome']) . "</option>";
+                                }
+                            } else {
+                                
+                                echo "<option value=''>Nenhum professor cadastrado</option>";
                             }
-                        } else {
-                           
-                            echo "<option value=''>Nenhuma sala cadastrada</option>";
+                        } catch (PDOException $e) {
+                            echo "<option value=''>Erro ao carregar professores</option>";
                         }
-                    ?>
+                        ?>
                     </select>
                 </div>
 
@@ -133,6 +135,7 @@ include_once("templates/header.php"); // Inclui o cabeçalho
                 <div class="form-group">
                     <label for="dia">Dia da Semana:</label>
                     <select id="dia" name="dia" required>
+                        <option value="">Selecione um dia</option>
                         <option value="Segunda-feira">Segunda-feira</option>
                         <option value="Terça-feira">Terça-feira</option>
                         <option value="Quarta-feira">Quarta-feira</option>
@@ -146,6 +149,7 @@ include_once("templates/header.php"); // Inclui o cabeçalho
                 <div class="form-group">
                     <label for="periodo">Período:</label>
                     <select id="periodo" name="periodo" required>
+                        <option value="">Selecione um período</option>
                         <option value="Manhã">Manhã</option>
                         <option value="Tarde">Tarde</option>
                         <option value="Noite">Noite</option>
