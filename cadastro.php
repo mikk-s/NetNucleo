@@ -65,7 +65,7 @@ include_once("templates/header.php")
             <input type="password" name="senha" placeholder="Senha" required>
             <button type="submit" class="submit-button">Cadastrar</button>
 </form>
-<?php if (isset($_SESSION["usuario"])): ?>
+<?php if (!isset($_SESSION["usuario"])): ?>
     <p class="secondary-text">Já tem uma conta? <a href="login.php">Faça login</a></p>
     <?php endif; ?>
     </div>

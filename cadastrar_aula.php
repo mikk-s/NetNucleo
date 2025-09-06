@@ -15,22 +15,24 @@ $sucesso_cadastro = "";
 // Verifica se o formulário foi enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $n_sala = $_POST['n_sala'];
-    $aula = $_POST['aula']; // No seu formulário, 'Aula' é o campo para o professor
+    $disciplina = $_POST['disciplina'];
+    $professor = $_POST['professor'];
     $data = $_POST['data'];
     $dia = $_POST['dia'];
     $periodo = $_POST['periodo'];
 
     // Validação básica dos campos
-    if (empty($n_sala) || empty($aula) || empty($data) || empty($dia) || empty($periodo)) {
+    if (empty($n_sala) || empty($disciplina) || empty($professor) || empty($data) || empty($dia) || empty($periodo)) {
         $erro_cadastro = "Por favor, preencha todos os campos.";
     } else {
         try {
             // Prepara a query SQL para inserção
-            $stmt = $conn->prepare("INSERT INTO salas (n_sala, aula, data, dia, periodo) VALUES (:n_sala, :aula, :data, :dia, :periodo)");
+            $stmt = $conn->prepare("INSERT INTO aulass (n_sala,disciplina, professor, data, dia, periodo) VALUES (:n_sala, :disciplina, :professor,  :data, :dia, :periodo)");
 
             // Bind dos parâmetros
             $stmt->bindParam(':n_sala', $n_sala);
-            $stmt->bindParam(':aula', $aula);
+            $stmt->bindParam(':disciplina', $disciplina);
+            $stmt->bindParam(':professor', $professor);
             $stmt->bindParam(':data', $data);
             $stmt->bindParam(':dia', $dia);
             $stmt->bindParam(':periodo', $periodo);
@@ -76,12 +78,51 @@ include_once("templates/header.php"); // Inclui o cabeçalho
             <form action="cadastrar_aula.php" method="POST">
                 <div class="form-group">
                     <label for="n_sala">Sala:</label>
-                    <input type="text" id="n_sala" name="n_sala" required>
+                    <select id="n_sala" name="n_sala" required>
+                        <option value="">Selecione uma sala</option>"></option>
+                    <?php
+                    $sql_salas = "SELECT n_sala, bloco FROM salas ORDER BY n_sala ASC";
+
+                    $resultado_salas = $conn->query($sql_salas);
+                     if ($resultado_salas->rowCount() > 0) {
+                          
+                            while($sala = $resultado_salas->fetch(PDO::FETCH_ASSOC)) {
+                              
+                                echo "<option value='" . htmlspecialchars($sala['n_sala']) . "'>" . htmlspecialchars($sala['n_sala']) . " - Bloco " . htmlspecialchars($sala['bloco']) . "</option>";
+                            }
+                        } else {
+                           
+                            echo "<option value=''>Nenhuma sala cadastrada</option>";
+                        }
+                    ?>
+                    </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="aula">Professor:</label>
-                    <input type="text" id="aula" name="aula" required>
+                <label for="disciplina">Disciplina:</label>
+                <input type="text" id="disciplina" name="disciplina" required>
+            </div>
+
+                <div class="form-group">
+                    <label for="professor">Professor:</label>
+                    <select id="professor" name="professor" required>
+                        <option value="">Selecione um professor</option>
+                    <?php
+                    $sql_prof = "SELECT nome FROM usuarios ORDER BY nome ASC";
+
+                    $resultado_prof = $conn->query($sql_prof);
+                     if ($resultado_prof->rowCount() > 0) {
+                          
+                            while($prof = $resultado_prof->fetch(PDO::FETCH_ASSOC)) {
+                              
+                                echo "<option value=''>" . htmlspecialchars($prof['nome']) . "</option>";
+                            }
+                        } else {
+                           
+                            echo "<option value=''>Nenhuma sala cadastrada</option>";
+                        }
+                    ?>
+                    </select>
                 </div>
 
                 <div class="form-group">

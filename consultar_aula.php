@@ -21,13 +21,14 @@ include_once("templates/header.php");
             <thead>
                 <tr>
                     <th>Sala</th>
+                    <th>Disciplina</th>
                     <th>Professor</th>
                     <th>Horários</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
-                $sql = "SELECT n_sala, aula, data, dia, periodo FROM salas ORDER BY data DESC, periodo ASC";
+                $sql = "SELECT n_sala,disciplina, professor, data, dia, periodo FROM aulass ORDER BY data DESC, periodo ASC";
                 $stmt = $conn->prepare($sql);
                 $stmt->execute();
                 $aulas = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -36,7 +37,8 @@ include_once("templates/header.php");
                     foreach ($aulas as $aula) {
                         echo "<tr>";
                         echo "<td>" . htmlspecialchars($aula['n_sala']) . "</td>";
-                        echo "<td>" . htmlspecialchars($aula['aula']) . "</td>";
+                        echo "<td>" . htmlspecialchars($aula['disciplina']) . "</td>";
+                        echo "<td>" . htmlspecialchars($aula['professor']) . "</td>";
                         echo "<td>" . htmlspecialchars($aula['dia']) . ", " . htmlspecialchars($aula['data']) . " - " . htmlspecialchars($aula['periodo']) . "</td>";
                         echo "</tr>";
                     }
