@@ -9,6 +9,7 @@ if (!isset($_SESSION["usuario"])) {
 
 include_once("templates/header.php");
 ?>
+<link rel="stylesheet" href="css/style.css">
 <main class="form-container">
 <form method="post" class="form-card">
     <h2>Cadastrar Sala</h2>
