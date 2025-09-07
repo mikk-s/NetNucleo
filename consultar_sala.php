@@ -26,7 +26,7 @@ include_once("templates/header.php");
             <tbody>
                 <?php
                 try {
-                    // Seleciona todos os dados da tabela 'salas'
+                  
                     $sql = "SELECT n_sala, bloco FROM salas ORDER BY bloco ASC ";
                     $stmt = $conn->prepare($sql);
                     $stmt->execute();

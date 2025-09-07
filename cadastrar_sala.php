@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         else {
             $sql = "INSERT INTO salas (n_sala, bloco) VALUES (:n_sala, :bloco)";
             $stmt = $conn->prepare($sql);
-            $stmt->bindParam(":n_sala", $n_sala); // Corrected parameter name
+            $stmt->bindParam(":n_sala", $n_sala); 
             $stmt->bindParam(":bloco", $bloco);
            
         

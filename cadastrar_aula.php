@@ -1,6 +1,6 @@
 <?php
 session_start();
-require "conexao.php"; // Inclui o arquivo de conexão com o banco de dados
+require "conexao.php";
 
 // Verifica se o usuário está logado
 if (!isset($_SESSION["usuario"])) {
@@ -21,15 +21,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dia = $_POST['dia'];
     $periodo = $_POST['periodo'];
 
-    // Validação básica dos campos
     if (empty($n_sala) || empty($disciplina) || empty($professor) || empty($data) || empty($dia) || empty($periodo)) {
         $erro_cadastro = "Por favor, preencha todos os campos.";
     } else {
         try {
-            // Prepara a query SQL para inserção
+        
             $stmt = $conn->prepare("INSERT INTO aulass (n_sala,disciplina, professor, data, dia, periodo) VALUES (:n_sala, :disciplina, :professor,  :data, :dia, :periodo)");
 
-            // Bind dos parâmetros
+           
             $stmt->bindParam(':n_sala', $n_sala);
             $stmt->bindParam(':disciplina', $disciplina);
             $stmt->bindParam(':professor', $professor);
@@ -37,21 +36,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bindParam(':dia', $dia);
             $stmt->bindParam(':periodo', $periodo);
 
-            // Executa a query
             $stmt->execute();
             $sucesso_cadastro = "Aula cadastrada com sucesso!";
-
-            // Opcional: Redirecionar para a página de consulta após o cadastro
-            // header("Location: consultar_sala.php");
-            // exit();
-
+            exit();
         } catch (PDOException $e) {
             $erro_cadastro = "Erro ao cadastrar aula: " . $e->getMessage();
         }
     }
 }
 
-include_once("templates/header.php"); // Inclui o cabeçalho
+include_once("templates/header.php"); 
 ?>
 
 <!DOCTYPE html>

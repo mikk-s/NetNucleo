@@ -33,38 +33,36 @@
 
  
     .header-menu {
-        display: flex; /* Ativa o Flexbox */
-        align-items: center; /* Alinha tudo verticalmente */
+        display: flex; 
+        align-items: center; 
         background-color: #e9ecef;
-        padding: 10px 20px; /* Adicionado padding lateral */
+        padding: 10px 20px; 
     }
 
-    /* AS TRÊS COLUNAS DE ALINHAMENTO - NOVO */
+  
     .nav-left, .nav-center, .nav-right {
-        flex: 1; /* Faz com que cada coluna ocupe 1/3 do espaço */
+        flex: 1; 
     }
 
-    /* Alinha os botões no centro da coluna do meio */
+    
     .nav-center {
         text-align: center;
     }
 
-    /* Alinha o texto de login à direita na coluna da direita */
+   
     .nav-right {
         text-align: right;
     }
 
 
-    /* Lista de botões */
     ul {
         list-style: none;
         margin: 0;
         padding: 0;
-        display: inline-flex; /* Alterado para inline-flex para respeitar o text-align do pai */
+        display: inline-flex; 
         justify-content: center;
     }
 
-    /* Estilo base dos botões */
     .CadButton, .VisButton, .ExButton, .SairButton {
         position: relative;
         cursor: pointer;
@@ -82,12 +80,12 @@
     .SairButton a{
         text-decoration: none;
     }
-    /* Efeito hover nos botões */
+  
     .CadButton p:hover, .VisButton p:hover, .ExButton p:hover, .SairButton p:hover {
         background-color: #4e5d6d;
     }
 
-    /* Conteúdo dos Dropdowns (inicialmente escondidos) */
+
     .dropdown-content1, .dropdown-content2, .dropdown-content3 {
         display: none;
         position: absolute;
@@ -99,7 +97,7 @@
         overflow: hidden; 
     }
 
-    /* Links dentro dos Dropdowns */
+
     .dropdown-content1 a, .dropdown-content2 a, .dropdown-content3 a {
         color: black;
         padding: 12px 16px;
@@ -108,12 +106,11 @@
         text-align: left;
     }
 
-    /* Efeito hover nos links dos dropdowns */
+
     .dropdown-content1 a:hover, .dropdown-content2 a:hover, .dropdown-content3 a:hover {
         background-color: #ddd;
     }
 
-    /* Classe para mostrar o dropdown (adicionada via JavaScript) */
     .show {
         display: block;
     }
@@ -121,22 +118,22 @@
     /* fim da header */
     /* inicio login*/
     .form-container {
-        flex-grow: 1; /* Ocupa todo o espaço vertical disponível (abaixo do header) */
+        flex-grow: 1; 
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: #f0f2f5; /* Fundo cinza claro padrão */
+        background-color: #f0f2f5; 
         padding: 20px;
     }
     
-    /* O "card" branco que envolve o formulário */
+   
     .form-card {
         background-color: white;
         padding: 40px;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         width: 100%;
-        max-width: 500px; /* Largura máxima padrão para formulários */
+        max-width: 500px; 
         box-sizing: border-box;
     }
     
@@ -174,14 +171,14 @@
     .form-card .submit-button {
         width: 100%;
         padding: 12px 20px;
-        background-color: #5b7086; /* Azul padrão */
+        background-color: #5b7086; 
         color: white;
         border: none;
         border-radius: 5px;
         cursor: pointer;
         font-size: 1.1em;
         font-weight: bold;
-        margin-top: 10px; /* Espaço antes do botão */
+        margin-top: 10px;
         transition: background-color 0.3s;
     }
     
@@ -203,7 +200,7 @@
     }
     /*Fim login e cadastro*/
 
-    /* Estilos gerais */
+  
 
 /* Container do formulário/tabela */
 .form-container {

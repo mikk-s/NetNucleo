@@ -1,14 +1,14 @@
 <?php
 ;
 require "conexao.php";
-session_start(); // Certifique-se de que a sessão está iniciada
+session_start(); 
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $login = $_POST["login"];
     $senha = $_POST["senha"];
     $nome = $_POST["nome"];
 
-    // Verifica se usuário já existe
+    
     $checkSql = "SELECT COUNT(*) FROM usuarios WHERE login = :login";
     $checkStmt = $conn->prepare($checkSql);
     $checkStmt->bindParam(":login", $login);
@@ -41,8 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
-// Exibe mensagem de erro se existir
-// num apague meu php 
+
 if (isset($_SESSION["erro"])) {
     echo "<p class='aviso-erro'>{$_SESSION["erro"]}</p>";
     unset($_SESSION["erro"]);

@@ -50,8 +50,8 @@ include_once("templates/header.php");
                     if ($salas) {
                         foreach ($salas as $sala) {
                             echo "<tr>";
-                            echo "<td>" . htmlspecialchars($sala['n_sala']) . "</td>"; // Display room number
-                            echo "<td>" . htmlspecialchars($sala['bloco']) . "</td>"; // Display block
+                            echo "<td>" . htmlspecialchars($sala['n_sala']) . "</td>"; 
+                            echo "<td>" . htmlspecialchars($sala['bloco']) . "</td>"; 
                             echo "<td>";
                             echo "<form method='post' action='excluir_salas.php' onsubmit=\"return confirm('Tem certeza que deseja excluir esta sala?');\">";
                             echo "<input type='hidden' name='excluir_sala_id' value='" . $sala['id'] . "'>";
