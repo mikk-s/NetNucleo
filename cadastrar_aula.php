@@ -87,8 +87,7 @@ include_once("templates/header.php"); // Inclui o cabeçalho
                      if ($resultado_salas->rowCount() > 0) {
                           
                             while($sala = $resultado_salas->fetch(PDO::FETCH_ASSOC)) {
-                              
-                                echo "<option value='" . htmlspecialchars($sala['n_sala']) . "'>" . htmlspecialchars($sala['n_sala']) . " - Bloco " . htmlspecialchars($sala['bloco']) . "</option>";
+ echo "<option value='" . htmlspecialchars($sala['n_sala']) . " - Bloco " . htmlspecialchars($sala['bloco']) . "'>" . htmlspecialchars($sala['n_sala']) . " - Bloco " . htmlspecialchars($sala['bloco']) . "</option>";
                             }
                         } else {
                            
