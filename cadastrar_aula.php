@@ -7,7 +7,8 @@ if (!isset($_SESSION["usuario"])) {
     $_SESSION['erro'] = "Você não está logado! Por favor, faça o login.";
     header("Location: login.php");
     exit();
-}
+} 
+
 
 $erro_cadastro = "";
 $sucesso_cadastro = "";

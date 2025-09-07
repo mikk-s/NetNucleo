@@ -117,6 +117,7 @@ include_once("templates/header.php");
                         echo "<tr><td colspan='2'>Erro ao carregar dados: " . htmlspecialchars($e->getMessage()) . "</td></tr>";
                     }
                     ?>
+                    
                 </tbody>
             </table>
         </div>

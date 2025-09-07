@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }
+    
 
     // Configura cada botão com seu respectivo dropdown
     setupDropdown('.CadButton', '.dropdown-content1');

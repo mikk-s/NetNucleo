@@ -53,7 +53,7 @@ include_once("helpers/url.php");
  <a href="<?= $BASE_URL ?>excluir_professores.php">Excluir Professores</a>
  <a href="<?= $BASE_URL ?>excluir_salas.php">Excluir Salas</a>
  <a href="<?= $BASE_URL ?>excluir_aulas.php">Excluir Aulas</a>
- 
+  
  </div>
  </li>
  <li class="SairButton">
