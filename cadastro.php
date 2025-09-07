@@ -70,4 +70,3 @@ include_once("templates/header.php")
     </div>
 </main>
 </html>
- 

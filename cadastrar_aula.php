@@ -9,7 +9,6 @@ if (!isset($_SESSION["usuario"])) {
     exit();
 } 
 
-
 $erro_cadastro = "";
 $sucesso_cadastro = "";
 

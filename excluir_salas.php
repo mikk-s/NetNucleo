@@ -67,7 +67,6 @@ include_once("templates/header.php");
                     echo "<tr><td colspan='2'>Erro ao carregar dados: " . $e->getMessage() . "</td></tr>";
                 }
                 ?>
-                
             </tbody>
         </table>
     </div>

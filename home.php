@@ -10,7 +10,6 @@ if (!isset($_SESSION["usuario"])) {
 include_once("templates/header.php");
 ?>
 
-
 <link rel="stylesheet" href="css/style.css">
 
 <p>Seja bem vindo. Para começar, visualize as turmas existentes em Consultas>Turmas</p>

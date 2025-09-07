@@ -6,7 +6,7 @@ if (!isset($_SESSION["usuario"])) {
     header("Location: login.php");
     exit();
 }
- 
+
 include_once("templates/header.php");
 ?>
 <link rel="stylesheet" href="css/style.css">

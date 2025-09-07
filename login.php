@@ -3,7 +3,6 @@
 session_start();
 ob_start();
 
-
 require "conexao.php";
 include_once("templates/header.php");
 
