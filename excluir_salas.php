@@ -2,74 +2,59 @@
 session_start();
 require "conexao.php";
 
+// 1. VERIFICAÇÕES DE SEGURANÇA BÁSICAS
 if (!isset($_SESSION["usuario"])) {
-    $_SESSION['erro'] = "Você não está logado! Por favor, faça o login.";
     header("Location: login.php");
     exit();
 }
 
-// Lógica de exclusão
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['excluir_sala_id'])) {
-    $sala_id = $_POST['excluir_sala_id'];
-
-    try {
-        $sql_delete = "DELETE FROM salas WHERE id = :id";
-        $stmt_delete = $conn->prepare($sql_delete);
-        $stmt_delete->bindParam(':id', $sala_id);
-        $stmt_delete->execute();
-        echo "<script>alert('Sala excluída com sucesso!'); window.location.href='excluir_salas.php';</script>";
-    } catch (PDOException $e) {
-        echo "<script>alert('Erro ao excluir sala: " . $e->getMessage() . "');</script>";
-    }
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['id_sala'])) {
+    $_SESSION['mensagem'] = "Requisição inválida.";
+    $_SESSION['mensagem_tipo'] = "erro";
+    header("Location: excluir.php?aba=turmas");
+    exit();
 }
 
-include_once("templates/header.php");
+$id_sala = $_POST['id_sala'];
+
+try {
+    // 2. BUSCA O NOME DA SALA ANTES DE DELETAR (PARA VERIFICAR O USO)
+    $stmt_sala = $conn->prepare("SELECT n_sala FROM salas WHERE id = ?");
+    $stmt_sala->execute([$id_sala]);
+    $sala = $stmt_sala->fetch(PDO::FETCH_ASSOC);
+
+    if (!$sala) {
+        throw new Exception("Sala não encontrada.");
+    }
+    $nome_da_sala = $sala['n_sala'];
+
+    // 3. VERIFICAÇÃO DE SEGURANÇA: A SALA ESTÁ SENDO USADA EM ALGUMA AULA?
+    $stmt_check = $conn->prepare("SELECT COUNT(*) FROM aulass WHERE n_sala = ?");
+    $stmt_check->execute([$nome_da_sala]);
+    $count = $stmt_check->fetchColumn();
+
+    if ($count > 0) {
+        // Se count for maior que 0, a sala está em uso! IMPEDE A EXCLUSÃO.
+        $_SESSION['mensagem'] = "Não é possível excluir a turma/sala '" . htmlspecialchars($nome_da_sala) . "' pois ela já está associada a " . $count . " aula(s).";
+        $_SESSION['mensagem_tipo'] = "erro";
+    } else {
+        // 4. SE NÃO ESTIVER EM USO, EXECUTA A EXCLUSÃO
+        $stmt_delete = $conn->prepare("DELETE FROM salas WHERE id = ?");
+        if ($stmt_delete->execute([$id_sala])) {
+            $_SESSION['mensagem'] = "Turma/Sala '" . htmlspecialchars($nome_da_sala) . "' excluída com sucesso!";
+        } else {
+            $_SESSION['mensagem'] = "Erro ao excluir a turma/sala.";
+            $_SESSION['mensagem_tipo'] = "erro";
+        }
+    }
+
+} catch (Exception $e) {
+    $_SESSION['mensagem'] = "Erro: " . $e->getMessage();
+    $_SESSION['mensagem_tipo'] = "erro";
+}
+
+// 5. REDIRECIONA DE VOLTA PARA A ABA CORRETA
+header("Location: excluir.php?aba=turmas");
+exit();
+
 ?>
-
-<link rel="stylesheet" href="css/style.css">
-
-<main class="form-container">
-    <div class="form-card">
-        <h2>Excluir Salas</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Sala</th>
-                    <th>Bloco</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                try {
-                    $sql_select = "SELECT DISTINCT n_sala,bloco, id FROM salas ORDER BY n_sala ASC";
-                    $stmt_select = $conn->prepare($sql_select);
-                    $stmt_select->execute();
-                    $salas = $stmt_select->fetchAll(PDO::FETCH_ASSOC);
-
-                    if ($salas) {
-                        foreach ($salas as $sala) {
-                            echo "<tr>";
-                            echo "<td>" . htmlspecialchars($sala['n_sala']) . "</td>"; 
-                            echo "<td>" . htmlspecialchars($sala['bloco']) . "</td>"; 
-                            echo "<td>";
-                            echo "<form method='post' action='excluir_salas.php' onsubmit=\"return confirm('Tem certeza que deseja excluir esta sala?');\">";
-                            echo "<input type='hidden' name='excluir_sala_id' value='" . $sala['id'] . "'>";
-                            echo "<button type='submit' class='excluir-btn'>Excluir</button>";
-                            echo "</form>";
-                            echo "</td>";
-                            echo "</tr>";
-                        }
-                    } else {
-                        echo "<tr><td colspan='2'>Nenhuma sala encontrada.</td></tr>";
-                    }
-                } catch (PDOException $e) {
-                    echo "<tr><td colspan='2'>Erro ao carregar dados: " . $e->getMessage() . "</td></tr>";
-                }
-                ?>
-                
-            </tbody>
-        </table>
-    </div>
-</main>
-</html>

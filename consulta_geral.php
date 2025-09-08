@@ -35,12 +35,12 @@ if (isset($_POST['buscar_por_turma'])) {
     // Se a opção "Todas as aulas" for selecionada
     if ($turma_id === 'all') {
         try {
-            $sql = "SELECT a.data_aula, a.hora_inicio, a.hora_fim, t.nome_turma, p.nome AS nome_professor, s.numero_sala, s.bloco
+            $sql = "SELECT a.data_aula, a.hora_inicio, a.hora_fim, t.nome_turma, p.nome AS nome_professor, s.numero_sala, s.bloco, s.capacidade
                     FROM aulas a
                     JOIN professores p ON a.professor_id = p.id
                     JOIN salas s ON a.sala_id = s.id
                     JOIN turmas t ON a.turma_id = t.id
-                    ORDER BY a.data_aula, a.hora_inicio, t.nome_turma";
+                    ORDER BY s.bloco, a.data_aula, a.hora_inicio, t.nome_turma";
             $stmt = $conn->query($sql);
             $resultados_turma = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
@@ -50,7 +50,7 @@ if (isset($_POST['buscar_por_turma'])) {
     // Se uma turma específica for selecionada
     elseif (!empty($turma_id)) {
         try {
-            $sql = "SELECT a.data_aula, a.hora_inicio, a.hora_fim, p.nome AS nome_professor, s.numero_sala, s.bloco
+            $sql = "SELECT a.data_aula, a.hora_inicio, a.hora_fim, p.nome AS nome_professor, s.numero_sala, s.bloco, s.capacidade
                     FROM aulas a
                     JOIN professores p ON a.professor_id = p.id
                     JOIN salas s ON a.sala_id = s.id
@@ -162,6 +162,7 @@ if (isset($_POST['buscar_por_professor'])) {
                                 <th>Turma</th>
                             <?php endif; ?>
                             <th>Professor</th>
+                            <th>Capacidade</th>
                             <th>Sala</th>
                         </tr>
                     </thead>
@@ -174,6 +175,7 @@ if (isset($_POST['buscar_por_professor'])) {
                                     <td><?= htmlspecialchars($aula['nome_turma']); ?></td>
                                 <?php endif; ?>
                                 <td><?= htmlspecialchars($aula['nome_professor']); ?></td>
+                                <td><?= htmlspecialchars($aula['capacidade']) . ' pessoas'; ?></td>
                                 <td><?= htmlspecialchars($aula['bloco'] . ' - ' . $aula['numero_sala']); ?></td>
                             </tr>
                         <?php endforeach; ?>
@@ -207,4 +209,3 @@ if (isset($_POST['buscar_por_professor'])) {
         </div>
     </div>
 </main>
-

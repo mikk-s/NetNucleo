@@ -158,6 +158,8 @@
     .form-card input[type="password"],
     .form-card input[type="date"],
     .form-card input[type="time"],
+    .form-card input[type="email"],
+    .form-card input[type="number"],
     .form-card select {
         width: 100%;
         padding: 10px;

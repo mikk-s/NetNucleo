@@ -24,7 +24,8 @@ include_once("templates/header.php");
     <option value="D">D</option>
 
     </select>
-   
+   <label for="capacidade">Capacidade</label>
+   <input type="number" name="capacidade" id="cap">
     <button type="submit" class="submit-button">Cadastrar</button>
 </form>
 </main>
@@ -34,6 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $numero_sala = $_POST["numero_sala"];
     $bloco = $_POST["bloco"];
+    $capacidade = $_POST["capacidade"];
 
     if((isset($_POST["numero_sala"])  )) {
         $n_sala_check = $_POST["numero_sala"];
@@ -51,11 +53,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             exit();
         }
         else {
-            $sql = "INSERT INTO salas (numero_sala, bloco) VALUES (:numero_sala, :bloco)";
+            $sql = "INSERT INTO salas (numero_sala, bloco, capacidade) VALUES (:numero_sala, :bloco, :capacidade)";
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(":numero_sala", $numero_sala); 
             $stmt->bindParam(":bloco", $bloco);
-           
+            $stmt->bindParam(":capacidade", $capacidade);
+
         
             if ($stmt->execute()) {
                 echo "<script>alert('Sala cadastrada com sucesso!');</script>";
