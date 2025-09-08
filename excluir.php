@@ -13,7 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tabela = '';
     $id_para_excluir = null;
     $aba_retorno = $_POST['aba_retorno'] ?? 'aulas'; // Padrão para aulas
-    $nome_campo_id = 'id';
 
     // Determina qual tipo de item está sendo excluído
     if (isset($_POST['excluir_aula_id'])) {
@@ -31,21 +30,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($tabela && $id_para_excluir) {
-        try {
-            $stmt = $conn->prepare("DELETE FROM $tabela WHERE $nome_campo_id = ?");
-            $stmt->execute([$id_para_excluir]);
-            
-            if ($stmt->rowCount() > 0) {
-                // APENAS GUARDA A MENSAGEM NA SESSÃO
-                $_SESSION['mensagem'] = ucfirst(rtrim($tabela, 's')) . ' excluído(a) com sucesso!';
-            } else {
-                $_SESSION['mensagem'] = "Item não encontrado ou já foi excluído.";
+        $pode_excluir = true;
+
+        // VERIFICAÇÃO DE SEGURANÇA: Se não for uma aula, verifica se o item está em uso
+        if ($tabela !== 'aulas') {
+            $fk_column = '';
+            switch ($tabela) {
+                case 'professores': $fk_column = 'professor_id'; break;
+                case 'turmas': $fk_column = 'turma_id'; break;
+                case 'salas': $fk_column = 'sala_id'; break;
             }
-        } catch (PDOException $e) {
-            // GUARDA A MENSAGEM DE ERRO NA SESSÃO
-            if ($e->getCode() == '23000') {
-                $_SESSION['mensagem'] = 'Não é possível excluir este item pois ele está sendo usado em uma aula agendada.';
-            } else {
+
+            try {
+                $check_stmt = $conn->prepare("SELECT COUNT(*) FROM aulas WHERE $fk_column = ?");
+                $check_stmt->execute([$id_para_excluir]);
+                $count = $check_stmt->fetchColumn();
+
+                if ($count > 0) {
+                    $pode_excluir = false;
+                    $_SESSION['mensagem'] = "Não é possível excluir este item pois ele está associado a {$count} aula(s) agendada(s).";
+                }
+            } catch (PDOException $e) {
+                $pode_excluir = false;
+                $_SESSION['mensagem'] = "Erro ao verificar o uso do item: " . $e->getMessage();
+            }
+        }
+
+        if ($pode_excluir) {
+            try {
+                $stmt = $conn->prepare("DELETE FROM $tabela WHERE id = ?");
+                $stmt->execute([$id_para_excluir]);
+                
+                if ($stmt->rowCount() > 0) {
+                    $_SESSION['mensagem'] = ucfirst(rtrim($tabela, 's')) . ' excluído(a) com sucesso!';
+                } else {
+                    $_SESSION['mensagem'] = "Item não encontrado ou já foi excluído.";
+                }
+            } catch (PDOException $e) {
+                // Fallback de segurança para outras restrições do banco de dados
                 $_SESSION['mensagem'] = 'Erro ao excluir: ' . $e->getMessage();
             }
         }
@@ -189,3 +211,4 @@ if (isset($_SESSION['mensagem'])) {
     unset($_SESSION['mensagem']);
 }
 ?>
+
