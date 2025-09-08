@@ -14,7 +14,7 @@ include_once("templates/header.php");
 <form method="post" class="form-card">
     <h2>Cadastrar Sala</h2>
     <label for="nome">Sala:</label>
-    <input type="text" id="nome" name="n_sala" required>
+    <input type="text" id="nome" name="numero_sala" required>
     
     <label for="bloco">Bloco:</label>
 <select name="bloco" required>
@@ -32,16 +32,16 @@ include_once("templates/header.php");
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     include "conexao.php";
 
-    $n_sala = $_POST["n_sala"];
+    $numero_sala = $_POST["numero_sala"];
     $bloco = $_POST["bloco"];
 
-    if((isset($_POST["n_sala"])  )) {
-        $n_sala_check = $_POST["n_sala"];
+    if((isset($_POST["numero_sala"])  )) {
+        $n_sala_check = $_POST["numero_sala"];
       
 
-        $check_sql = "SELECT COUNT(*) FROM salas WHERE n_sala = :n_sala AND bloco = :bloco";
+        $check_sql = "SELECT COUNT(*) FROM salas WHERE numero_sala = :numero_sala AND bloco = :bloco";
         $check_stmt = $conn->prepare($check_sql);
-        $check_stmt->bindParam(":n_sala", $n_sala_check);
+        $check_stmt->bindParam(":numero_sala", $n_sala_check);
         $check_stmt->bindParam(":bloco", $bloco);
         $check_stmt->execute();
         $count = $check_stmt->fetchColumn();
@@ -51,9 +51,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             exit();
         }
         else {
-            $sql = "INSERT INTO salas (n_sala, bloco) VALUES (:n_sala, :bloco)";
+            $sql = "INSERT INTO salas (numero_sala, bloco) VALUES (:numero_sala, :bloco)";
             $stmt = $conn->prepare($sql);
-            $stmt->bindParam(":n_sala", $n_sala); 
+            $stmt->bindParam(":numero_sala", $numero_sala); 
             $stmt->bindParam(":bloco", $bloco);
            
         

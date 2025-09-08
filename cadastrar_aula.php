@@ -15,34 +15,49 @@ $sucesso_cadastro = "";
 
 // Verifica se o formulário foi enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $n_sala = $_POST['n_sala'];
-    $disciplina = $_POST['disciplina'];
-    $professor = $_POST['professor'];
-    $data = $_POST['data'];
-    $dia = $_POST['dia'];
-    $periodo = $_POST['periodo'];
+    $turma_id = $_POST['turma_id'];
+    $professor_id = $_POST['professor_id'];
+    $sala_id = $_POST['sala_id'];
+    $data_aula = $_POST['data_aula'];
+    $hora_inicio = $_POST['hora_inicio'];
+    $hora_fim = $_POST['hora_fim'];
 
-    if (empty($n_sala) || empty($disciplina) || empty($professor) || empty($data) || empty($dia) || empty($periodo)) {
-        $erro_cadastro = "Por favor, preencha todos os campos.";
-    } else {
+
         try {
-        
-            $stmt = $conn->prepare("INSERT INTO aulass (n_sala,disciplina, professor, data, dia, periodo) VALUES (:n_sala, :disciplina, :professor,  :data, :dia, :periodo)");
+            // Verifica se a aula já existe
+            $check_sql = "SELECT COUNT(*) FROM aulas WHERE turma_id = :turma_id AND professor_id = :professor_id AND sala_id = :sala_id AND data_aula = :data_aula AND hora_inicio = :hora_inicio AND hora_fim = :hora_fim";
+            $check_stmt = $conn->prepare($check_sql);
+            $check_stmt->bindParam(':turma_id', $turma_id);
+            $check_stmt->bindParam(':professor_id', $professor_id);
+            $check_stmt->bindParam(':sala_id', $sala_id);
+            $check_stmt->bindParam(':data_aula', $data_aula);
+            $check_stmt->bindParam(':hora_inicio', $hora_inicio);
+            $check_stmt->bindParam(':hora_fim', $hora_fim);
+            $check_stmt->execute();
+            $aula_existe = $check_stmt->fetchColumn();
 
-           
-            $stmt->bindParam(':n_sala', $n_sala);
-            $stmt->bindParam(':disciplina', $disciplina);
-            $stmt->bindParam(':professor', $professor);
-            $stmt->bindParam(':data', $data);
-            $stmt->bindParam(':dia', $dia);
-            $stmt->bindParam(':periodo', $periodo);
+            if ($aula_existe > 0) {
+                $erro_cadastro = "Esta aula já está cadastrada.";
+            } else {
+                $stmt = $conn->prepare("INSERT INTO aulas(turma_id, professor_id, sala_id, data_aula, hora_inicio, hora_fim) VALUES (:turma_id, :professor_id, :sala_id, :data_aula, :hora_inicio, :hora_fim)");
+                $stmt->bindParam(':turma_id', $turma_id);
+                $stmt->bindParam(':professor_id', $professor_id);
+                $stmt->bindParam(':sala_id', $sala_id);
+                $stmt->bindParam(':data_aula', $data_aula);
+                $stmt->bindParam(':hora_inicio', $hora_inicio);
+                $stmt->bindParam(':hora_fim', $hora_fim);
 
-            $stmt->execute();
-            $sucesso_cadastro = "Aula cadastrada com sucesso!";
-            exit();
-        } catch (PDOException $e) {
-            $erro_cadastro = "Erro ao cadastrar aula: " . $e->getMessage();
+
+                $stmt->execute();
+                if(empty($_POST['turma_id']) || empty($_POST['professor_id']) || empty($_POST['sala_id']) || empty($_POST['data_aula']) || empty($_POST['hora_inicio']) || empty($_POST['hora_fim'])) {
+                    $erro_cadastro = "Por favor, preencha todos os campos.";
+                } else {
+                $sucesso_cadastro = "Aula cadastrada com sucesso!";
+                }
         }
+    }
+    catch (PDOException $e) {
+        $erro_cadastro = "Erro ao cadastrar aula: " . $e->getMessage();
     }
 }
 
@@ -73,16 +88,16 @@ include_once("templates/header.php");
             <form action="cadastrar_aula.php" method="POST">
                 <div class="form-group">
                     <label for="n_sala">Sala:</label>
-                    <select id="n_sala" name="n_sala" required>
+                    <select id="n_sala" name="sala_id" required>
                         <option value="">Selecione uma sala</option>"></option>
                     <?php
-                    $sql_salas = "SELECT n_sala, bloco FROM salas ORDER BY bloco ASC";
+                    $sql_salas = "SELECT id, numero_sala, bloco FROM salas ORDER BY bloco ASC";
 
                     $resultado_salas = $conn->query($sql_salas);
                      if ($resultado_salas->rowCount() > 0) {
                           
                             while($sala = $resultado_salas->fetch(PDO::FETCH_ASSOC)) {
- echo "<option value='" . htmlspecialchars($sala['n_sala']) . " - Bloco " . htmlspecialchars($sala['bloco']) . "'>" . htmlspecialchars($sala['n_sala']) . " - Bloco " . htmlspecialchars($sala['bloco']) . "</option>";
+ echo "<option value='" . htmlspecialchars($sala['id'])."'>" . htmlspecialchars($sala['numero_sala']) . " - Bloco " . htmlspecialchars($sala['bloco']) . "</option>";
                             }
                         } else {
                            
@@ -93,22 +108,38 @@ include_once("templates/header.php");
                 </div>
 
                 <div class="form-group">
-                <label for="disciplina">Disciplina:</label>
-                <input type="text" id="disciplina" name="disciplina" required>
+                <label for="turma_id">Selecione a Turma:</label>
+        <select id="turma_id" name="turma_id" required>
+            <option value="">-- Escolha uma turma --</option>
+            <?php
+                    $sql_turmas = "SELECT id, nome_turma FROM turmas ORDER BY nome_turma ASC";
+                    $resultado_salas = $conn->query($sql_turmas);
+                     if ($resultado_salas->rowCount() > 0) {
+                          
+                            while($sala = $resultado_salas->fetch(PDO::FETCH_ASSOC)) {
+    echo "<option value='" . htmlspecialchars($sala['id'])."'>" . htmlspecialchars($sala['nome_turma']) . "</option>";
+                            }
+                        } else {
+                           
+                            echo "<option value=''>Nenhuma sala cadastrada</option>";
+                        }
+                    ?>
+        </select>
+  
             </div>
 
                  <div class="form-group">
                     <label for="professor">Professor:</label>
-                    <select id="professor" name="professor" required>
+                    <select id="professor" name="professor_id" required>
                         <option value="">Selecione um professor</option>
                         <?php
                         try {
-                            $sql_prof = "SELECT nome FROM usuarios ORDER BY nome ASC";
+                            $sql_prof = "SELECT id, nome FROM professores ORDER BY nome ASC";
                             $resultado_prof = $conn->query($sql_prof);
                             if ($resultado_prof->rowCount() > 0) {
                                 while($prof = $resultado_prof->fetch(PDO::FETCH_ASSOC)) {
                                   
-                                    echo "<option value='" . htmlspecialchars($prof['nome']) . "'>" . htmlspecialchars($prof['nome']) . "</option>";
+                                    echo "<option value='" . htmlspecialchars($prof['id']) . "'>" . htmlspecialchars($prof['nome']) . "</option>";
                                 }
                             } else {
                                 
@@ -123,31 +154,17 @@ include_once("templates/header.php");
 
                 <div class="form-group">
                     <label for="data">Data:</label>
-                    <input type="date" id="data" name="data" required>
+                    <input type="date" id="data" name="data_aula" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="dia">Dia da Semana:</label>
-                    <select id="dia" name="dia" required>
-                        <option value="">Selecione um dia</option>
-                        <option value="Segunda-feira">Segunda-feira</option>
-                        <option value="Terça-feira">Terça-feira</option>
-                        <option value="Quarta-feira">Quarta-feira</option>
-                        <option value="Quinta-feira">Quinta-feira</option>
-                        <option value="Sexta-feira">Sexta-feira</option>
-                        <option value="Sábado">Sábado</option>
-                        <option value="Domingo">Domingo</option>
-                    </select>
+                    <label for="hora_inicio">Hora de Início:</label>
+                    <input type="time" id="hora_inicio" name="hora_inicio" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="periodo">Período:</label>
-                    <select id="periodo" name="periodo" required>
-                        <option value="">Selecione um período</option>
-                        <option value="Manhã">Manhã</option>
-                        <option value="Tarde">Tarde</option>
-                        <option value="Noite">Noite</option>
-                    </select>
+                    <label for="hora_fim">Hora de Fim:</label>
+                    <input type="time" id="hora_fim" name="hora_fim" required>
                 </div>
 
                 <button type="submit" class="submit-button">Cadastrar Aula</button>

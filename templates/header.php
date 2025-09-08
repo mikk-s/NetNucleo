@@ -34,19 +34,17 @@ include_once("helpers/url.php");
  <li class="CadButton">
  <p>Cadastros</p>
  <div class="dropdown-content1">
- <a href="<?= $BASE_URL ?>cadastro.php">Professores</a>
+ <a href="<?= $BASE_URL ?>cadastrar_professor.php">Professores</a>
  <a href="<?= $BASE_URL ?>cadastrar_sala.php">Salas</a>
  <a href="<?= $BASE_URL ?>cadastrar_aula.php">Aulas</a>
+ <a href="<?=$BASE_URL ?>cadastrar_turma.php">Turmas</a>
  </div>
  </li>
  <li class="VisButton">
-   <p>Consultas</p>
-  <div class="dropdown-content2">
- <a href="<?= $BASE_URL ?>consultar_professores.php">Consultar Professores</a>
- <a href="<?= $BASE_URL ?>consultar_sala.php">Consultar Salas</a>
- <a href="<?= $BASE_URL ?>consultar_aula.php">Consultar Aulas</a>
- </div>
+ <a href="<?= $BASE_URL ?>consulta_geral.php"> <p>Consultas</p></a>
  </li>
+
+ 
  <li class="ExButton">
  <p>Excluir</p>
  <div class="dropdown-content3">
