@@ -11,8 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $unidade_curricular = $_POST['unidade_curricular'];
 
             // Check if professor already exists
-            $check_stmt = $conn->prepare("SELECT COUNT(*) FROM professores WHERE nome = ?");
-            $check_stmt->execute([$nome_professor]);
+            $check_stmt = $conn->prepare("SELECT COUNT(*) FROM professores WHERE nome = ? AND unidade_curricular = ?");
+            $check_stmt->execute([$nome_professor, $unidade_curricular]);
             $count = $check_stmt->fetchColumn();
 
             if ($count > 0) {
@@ -39,8 +39,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php if (isset($message)) echo $message; ?>
                 <label for="nome_professor">Nome do Professor:</label>
                 <input type="text" id="nome_professor" name="nome_professor" required>
-                <label for="unidade_curricular">Unidade Curricular Principal:</label>
-                <input type="text" id="unidade_curricular" name="unidade_curricular" required>
+                <label for="unidade_curricular">Unidade Curricular:</label>
+                <select id="unidade_curricular" name="unidade_curricular" required>
+                    <option value="">Selecione uma Unidade Curricular</option>
+                    <?php
+                    $sql_unicurri = "SELECT DISTINCT unicurri FROM turmas ORDER BY unicurri ASC";
+                    $resultado_unicurri = $conn->query($sql_unicurri);
+                    if ($resultado_unicurri->rowCount() > 0) {
+                        while($unicurri = $resultado_unicurri->fetch(PDO::FETCH_ASSOC)) {
+                            echo "<option value='" . htmlspecialchars($unicurri['unicurri']) . "'>" . htmlspecialchars($unicurri['unicurri']) . "</option>";
+                        }
+                    } else {
+                        echo "<option value=''>Nenhuma Unidade Curricular cadastrada em turmas</option>";
+                    }
+                    ?>
+                </select>
             <button type="submit" class="submit-button">Cadastrar Professor</button>
         </form>
     </div>

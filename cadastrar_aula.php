@@ -1,3 +1,7 @@
+
+
+
+
 <?php
 session_start();
 require "conexao.php";
@@ -112,7 +116,7 @@ include_once("templates/header.php");
         <select id="turma_id" name="turma_id" required>
             <option value="">-- Escolha uma turma --</option>
             <?php
-                    $sql_turmas = "SELECT id, nome_turma FROM turmas ORDER BY nome_turma ASC";
+                    $sql_turmas = "SELECT id, nome_turma, unicurri FROM turmas ORDER BY nome_turma ASC";
                     $resultado_salas = $conn->query($sql_turmas);
                      if ($resultado_salas->rowCount() > 0) {
                           
@@ -133,17 +137,31 @@ include_once("templates/header.php");
                     <select id="professor" name="professor_id" required>
                         <option value="">Selecione um professor</option>
                         <?php
+                        // Fetch all professors initially
+                        $sql_prof = "SELECT id, nome, unidade_curricular FROM professores ORDER BY nome ASC";
+                        $resultado_prof = $conn->query($sql_prof);
+                        $professores_disponiveis = $resultado_prof->fetchAll(PDO::FETCH_ASSOC);
+
+                        // Fetch all turmas to get their unicurri
+                        $sql_turmas_unicurri = "SELECT id, unicurri FROM turmas";
+                        $resultado_turmas_unicurri = $conn->query($sql_turmas_unicurri);
+                        $turmas_unicurri_map = [];
+                        while ($turma_unicurri = $resultado_turmas_unicurri->fetch(PDO::FETCH_ASSOC)) {
+                            $turmas_unicurri_map[$turma_unicurri['id']] = $turma_unicurri['unicurri'];
+                        }
+
                         try {
-                            $sql_prof = "SELECT id, nome FROM professores ORDER BY nome ASC";
-                            $resultado_prof = $conn->query($sql_prof);
-                            if ($resultado_prof->rowCount() > 0) {
-                                while($prof = $resultado_prof->fetch(PDO::FETCH_ASSOC)) {
-                                  
-                                    echo "<option value='" . htmlspecialchars($prof['id']) . "'>" . htmlspecialchars($prof['nome']) . "</option>";
+                            foreach ($professores_disponiveis as $prof) {
+                                // Check if a turma is selected and if its unicurri matches the professor's
+                                // If no turma is selected, or if the unicurri matches, display the professor
+                                if (isset($_POST['turma_id']) && !empty($_POST['turma_id']) && $_POST['turma_id'] !== 'all') {
+                                    $selected_turma_unicurri = $turmas_unicurri_map[$_POST['turma_id']] ?? null;
+                                    if ($selected_turma_unicurri === $prof['unidade_curricular']) {
+                                        echo "<option value='" . htmlspecialchars($prof['id']) . "'>" . htmlspecialchars($prof['nome']) . " (" . htmlspecialchars($prof['unidade_curricular']) . ")</option>";
+                                    }
+                                } else {
+                                    echo "<option value='" . htmlspecialchars($prof['id']) . "'>" . htmlspecialchars($prof['nome']) . " (" . htmlspecialchars($prof['unidade_curricular']) . ")</option>";
                                 }
-                            } else {
-                                
-                                echo "<option value=''>Nenhum professor cadastrado</option>";
                             }
                         } catch (PDOException $e) {
                             echo "<option value=''>Erro ao carregar professores</option>";
@@ -173,3 +191,30 @@ include_once("templates/header.php");
     </main>
 </body>
 </html>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const turmaSelect = document.getElementById('turma_id');
+    const professorSelect = document.getElementById('professor');
+    const allProfessors = <?php echo json_encode($professores_disponiveis); ?>;
+    const turmasUnicurriMap = <?php echo json_encode($turmas_unicurri_map); ?>;
+
+    function updateProfessorOptions() {
+        const selectedTurmaId = turmaSelect.value;
+        const selectedTurmaUnicurri = turmasUnicurriMap[selectedTurmaId];
+
+        professorSelect.innerHTML = '<option value="">Selecione um professor</option>';
+
+        allProfessors.forEach(prof => {
+            if (!selectedTurmaId || prof.unidade_curricular === selectedTurmaUnicurri) {
+                const option = document.createElement('option');
+                option.value = prof.id;
+                option.textContent = `${prof.nome} (${prof.unidade_curricular})`;
+                professorSelect.appendChild(option);
+            }
+        });
+    }
+    turmaSelect.addEventListener('change', updateProfessorOptions);
+    updateProfessorOptions(); // Call on page load to set initial state
+});
+</script>

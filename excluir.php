@@ -69,11 +69,11 @@ try {
     switch ($aba_ativa) {
         case 'professores':
             $titulo_aba = 'Professores';
-            $itens_para_excluir = $conn->query("SELECT id, nome FROM professores ORDER BY nome")->fetchAll(PDO::FETCH_ASSOC);
+            $itens_para_excluir = $conn->query("SELECT id, nome, unidade_curricular FROM professores ORDER BY nome")->fetchAll(PDO::FETCH_ASSOC);
             break;
         case 'turmas':
             $titulo_aba = 'Turmas';
-            $itens_para_excluir = $conn->query("SELECT id, nome_turma AS nome FROM turmas ORDER BY nome_turma")->fetchAll(PDO::FETCH_ASSOC);
+            $itens_para_excluir = $conn->query("SELECT id, nome_turma AS nome, unicurri FROM turmas ORDER BY nome_turma")->fetchAll(PDO::FETCH_ASSOC);
             break;
         case 'salas':
             $titulo_aba = 'Salas';
@@ -136,7 +136,11 @@ try {
                     <?php elseif ($aba_ativa == 'salas'): ?>
                         <tr><th>Nº Sala</th><th>Bloco</th><th>Ação</th></tr>
                     <?php else: // Professores e Turmas ?>
-                        <tr><th>Nome</th><th>Ação</th></tr>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Unidade Curricular</th>
+                            <th>Ação</th>
+                        </tr>
                     <?php endif; ?>
                 </thead>
                 <tbody>
@@ -151,7 +155,15 @@ try {
                             <?php elseif ($aba_ativa == 'salas'): ?>
                                 <td><?= htmlspecialchars($item['numero_sala']); ?></td>
                                 <td><?= htmlspecialchars($item['bloco']); ?></td>
-                            <?php else: // Professores e Turmas ?>
+                            <?php elseif ($aba_ativa == 'professores'): ?>
+                                <td><?= htmlspecialchars($item['nome']); ?></td>
+                                <td><?= htmlspecialchars($item['unidade_curricular']); ?></td>
+                            <?php elseif ($aba_ativa == 'turmas'): ?>
+                                <td><?= htmlspecialchars($item['nome']); ?></td>
+                                <td><?= htmlspecialchars($item['unicurri']); ?></td>
+                            <?php else:
+                                // Fallback for any other case, though it should be covered
+                                ?>
                                 <td><?= htmlspecialchars($item['nome']); ?></td>
                             <?php endif; ?>
                             
@@ -178,4 +190,3 @@ try {
         <?php endif; ?>
     </div>
 </main>
-
