@@ -36,18 +36,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$id_para_excluir]);
             
             if ($stmt->rowCount() > 0) {
-                $_SESSION['mensagem'] = ucfirst(rtrim($tabela, 's')) . " excluído(a) com sucesso!";
+                // APENAS GUARDA A MENSAGEM NA SESSÃO
+                $_SESSION['mensagem'] = ucfirst(rtrim($tabela, 's')) . ' excluído(a) com sucesso!';
             } else {
-                $_SESSION['mensagem'] = "Item não encontrado ou já excluído.";
+                $_SESSION['mensagem'] = "Item não encontrado ou já foi excluído.";
             }
         } catch (PDOException $e) {
-            // Mensagem de erro genérica e segura para chaves estrangeiras
+            // GUARDA A MENSAGEM DE ERRO NA SESSÃO
             if ($e->getCode() == '23000') {
-                 $_SESSION['mensagem'] = "Não é possível excluir este item pois ele está sendo usado em uma aula agendada.";
+                $_SESSION['mensagem'] = 'Não é possível excluir este item pois ele está sendo usado em uma aula agendada.';
             } else {
-                 $_SESSION['mensagem'] = "Erro ao excluir: " . $e->getMessage();
+                $_SESSION['mensagem'] = 'Erro ao excluir: ' . $e->getMessage();
             }
-            $_SESSION['mensagem_tipo'] = 'erro';
         }
     }
     
@@ -117,13 +117,6 @@ try {
 
         <h3><?php echo $titulo_aba; ?></h3>
 
-        <?php if (isset($_SESSION['mensagem'])): ?>
-            <div class="message <?= ($_SESSION['mensagem_tipo'] ?? '') === 'erro' ? 'error' : 'success' ?>">
-                <?= $_SESSION['mensagem']; ?>
-            </div>
-            <?php unset($_SESSION['mensagem'], $_SESSION['mensagem_tipo']); ?>
-        <?php endif; ?>
-
         <?php if ($erro): ?>
             <p class="message error"><?= htmlspecialchars($erro); ?></p>
         <?php elseif (empty($itens_para_excluir)): ?>
@@ -161,10 +154,6 @@ try {
                             <?php elseif ($aba_ativa == 'turmas'): ?>
                                 <td><?= htmlspecialchars($item['nome']); ?></td>
                                 <td><?= htmlspecialchars($item['unicurri']); ?></td>
-                            <?php else:
-                                // Fallback for any other case, though it should be covered
-                                ?>
-                                <td><?= htmlspecialchars($item['nome']); ?></td>
                             <?php endif; ?>
                             
                             <!-- Coluna de Ação com o formulário de exclusão -->
@@ -190,3 +179,13 @@ try {
         <?php endif; ?>
     </div>
 </main>
+
+<?php
+// VERIFICA SE EXISTE UMA MENSAGEM NA SESSÃO PARA EXIBIR
+if (isset($_SESSION['mensagem'])) {
+    // USA addslashes para garantir que aspas na mensagem não quebrem o JavaScript
+    echo "<script>alert('" . addslashes($_SESSION['mensagem']) . "');</script>";
+    // Limpa a mensagem da sessão para não aparecer novamente
+    unset($_SESSION['mensagem']);
+}
+?>

@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $aula_existe = $check_stmt->fetchColumn();
 
             if ($aula_existe > 0) {
-                $erro_cadastro = "Esta aula já está cadastrada.";
+                  echo "<script>alert('Essa aula já está cadastrada.');</script>";
             } else {
                 $stmt = $conn->prepare("INSERT INTO aulas(turma_id, professor_id, sala_id, data_aula, hora_inicio, hora_fim) VALUES (:turma_id, :professor_id, :sala_id, :data_aula, :hora_inicio, :hora_fim)");
                 $stmt->bindParam(':turma_id', $turma_id);
@@ -54,10 +54,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 $stmt->execute();
                 if(empty($_POST['turma_id']) || empty($_POST['professor_id']) || empty($_POST['sala_id']) || empty($_POST['data_aula']) || empty($_POST['hora_inicio']) || empty($_POST['hora_fim'])) {
-                    $erro_cadastro = "Por favor, preencha todos os campos.";
+                    echo "<script>alert('Por favor, preencha todos os campos.');</script>";
                 } else {
-                $sucesso_cadastro = "Aula cadastrada com sucesso!";
-                }
+                    echo "<script>alert('Aula cadastrada com sucesso!');</script>";
+                } 
         }
     }
     catch (PDOException $e) {
@@ -81,13 +81,6 @@ include_once("templates/header.php");
     <main class="form-container">
         <div class="form-card">
             <h2>Cadastrar Aula</h2>
-
-            <?php if (!empty($erro_cadastro)): ?>
-                <p style="color: red;"><?php echo $erro_cadastro; ?></p>
-            <?php endif; ?>
-            <?php if (!empty($sucesso_cadastro)): ?>
-                <p style="color: green;"><?php echo $sucesso_cadastro; ?></p>
-            <?php endif; ?>
 
             <form action="cadastrar_aula.php" method="POST">
                 <div class="form-group">

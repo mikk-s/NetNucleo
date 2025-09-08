@@ -24,15 +24,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $count = $check_stmt->fetchColumn();
 
             if ($count > 0) {
-                $message = "<div class='message error'>Erro: Turma com este nome já cadastrada.</div>";
+                echo "<script>alert('Erro: Turma com este nome já cadastrada.');</script>";
             } else {
                 $stmt = $conn->prepare("INSERT INTO turmas (nome_turma, unicurri) VALUES (:nome_turma, :unicurri)");
                 $stmt->bindParam(':nome_turma', $nome_turma);
                 $stmt->bindParam(':unicurri', $unicurri);
                 if ($stmt->execute()) {
-                    $message = "<div class='message success'>Turma cadastrada com sucesso!</div>";
+                    echo "<script>alert('Turma cadastrada com sucesso!');</script>";
                 } else {
-                    $message = "<div class='message error'>Erro ao cadastrar turma.</div>";
+                    echo "<script>alert('Erro ao cadastrar turma.');</script>";
                 }
             }
         }
@@ -45,8 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Formulário de Turma -->
     <div class="form-card">
         <h2>Cadastrar Turma</h2>
-        <form method="POST">
-            <?php if (isset($message)) echo $message; ?>
+        <form method="POST">           
                 <label for="sigla_curso">Sigla do Curso:</label>
                 <input type="text" id="sigla_curso" name="sigla_curso" placeholder="Ex: TADS" required>
 

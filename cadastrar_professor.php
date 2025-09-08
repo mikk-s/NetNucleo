@@ -16,16 +16,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $count = $check_stmt->fetchColumn();
 
             if ($count > 0) {
-                $message = "<div class='message error'>Erro: Professor com este nome já cadastrado.</div>";
+                echo "<script>alert('Erro: Professor com este nome já cadastrado.');</script>";
             } else {
                 $stmt = $conn->prepare("INSERT INTO professores (nome, unidade_curricular) VALUES (?, ?)");
                 $stmt->execute([$nome_professor, $unidade_curricular]);
-                $message = "<div class='message success'>Professor cadastrado com sucesso!</div>";
+                echo "<script>alert('Professor cadastrado com sucesso!');</script>";
             }
         }
     }
     catch (PDOException $e) {
-        $message = "<div class='message error'>Erro ao cadastrar professor: " . $e->getMessage() . "</div>";
+        echo "<script>alert('Erro ao cadastrar professor: " . $e->getMessage() . "');</script>";
     }
    
 }
@@ -35,8 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Formulário de Professor -->
     <div class="form-card">
         <h2>Cadastrar Professor</h2>
-        <form method="POST">
-            <?php if (isset($message)) echo $message; ?>
+        <form method="POST">           
                 <label for="nome_professor">Nome do Professor:</label>
                 <input type="text" id="nome_professor" name="nome_professor" required>
                 <label for="unidade_curricular">Unidade Curricular:</label>

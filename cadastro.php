@@ -41,11 +41,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
-
 if (isset($_SESSION["erro"])) {
-    echo "<p class='aviso-erro'>{$_SESSION["erro"]}</p>";
+    echo "<script>alert('{$_SESSION["erro"]}');</script>";
     unset($_SESSION["erro"]);
-    
 }
 include_once("templates/header.php")
 ?>
