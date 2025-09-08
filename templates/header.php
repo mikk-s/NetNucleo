@@ -18,7 +18,7 @@ include_once("helpers/url.php");
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <script src="script.js"></script>
+    <script src="<?= $BASE_URL ?>script.js"></script>
     <header class="site-header">
         <div class="header-container">
  <h1 class="site-title">NETNÚCLEO - HORTO</h1>
@@ -40,7 +40,7 @@ include_once("helpers/url.php");
  <a href="<?=$BASE_URL ?>cadastrar_turma.php">Turmas</a>
  </div>
  </li>
- <li class="VisButton">
+ <li class="SairButton">
  <a href="<?= $BASE_URL ?>consulta_geral.php"> <p>Consultas</p></a>
  </li>
 
@@ -48,10 +48,11 @@ include_once("helpers/url.php");
  <li class="ExButton">
  <p>Excluir</p>
  <div class="dropdown-content3">
- <a href="<?= $BASE_URL ?>excluir_professores.php">Excluir Professores</a>
- <a href="<?= $BASE_URL ?>excluir_salas.php">Excluir Salas</a>
- <a href="<?= $BASE_URL ?>excluir_aulas.php">Excluir Aulas</a>
-  
+    <!-- LINKS CORRIGIDOS -->
+    <a href="<?= $BASE_URL ?>excluir.php?aba=aulas">Excluir Aulas</a>
+    <a href="<?= $BASE_URL ?>excluir.php?aba=professores">Excluir Professores</a>
+    <a href="<?= $BASE_URL ?>excluir.php?aba=turmas">Excluir Turmas</a>
+    <a href="<?= $BASE_URL ?>excluir.php?aba=salas">Excluir Salas</a>
  </div>
  </li>
  <li class="SairButton">

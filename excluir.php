@@ -13,40 +13,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tabela = '';
     $id_para_excluir = null;
     $aba_retorno = $_POST['aba_retorno'] ?? 'aulas'; // Padrão para aulas
-    $nome_campo_id = '';
+    $nome_campo_id = 'id';
 
     // Determina qual tipo de item está sendo excluído
     if (isset($_POST['excluir_aula_id'])) {
         $tabela = 'aulas';
-        $nome_campo_id = 'id';
         $id_para_excluir = $_POST['excluir_aula_id'];
     } elseif (isset($_POST['excluir_professor_id'])) {
         $tabela = 'professores';
-        $nome_campo_id = 'id';
         $id_para_excluir = $_POST['excluir_professor_id'];
     } elseif (isset($_POST['excluir_turma_id'])) {
         $tabela = 'turmas';
-        $nome_campo_id = 'id';
         $id_para_excluir = $_POST['excluir_turma_id'];
     } elseif (isset($_POST['excluir_sala_id'])) {
         $tabela = 'salas';
-        $nome_campo_id = 'id';
         $id_para_excluir = $_POST['excluir_sala_id'];
     }
 
     if ($tabela && $id_para_excluir) {
         try {
-            // A cláusula ON DELETE CASCADE no banco cuidará de remover aulas associadas
             $stmt = $conn->prepare("DELETE FROM $tabela WHERE $nome_campo_id = ?");
             $stmt->execute([$id_para_excluir]);
             
             if ($stmt->rowCount() > 0) {
-                $_SESSION['mensagem'] = ucfirst($tabela) . " excluído(a) com sucesso!";
+                $_SESSION['mensagem'] = ucfirst(rtrim($tabela, 's')) . " excluído(a) com sucesso!";
             } else {
                 $_SESSION['mensagem'] = "Item não encontrado ou já excluído.";
             }
         } catch (PDOException $e) {
-            $_SESSION['mensagem'] = "Erro ao excluir: " . $e->getMessage();
+            // Mensagem de erro genérica e segura para chaves estrangeiras
+            if ($e->getCode() == '23000') {
+                 $_SESSION['mensagem'] = "Não é possível excluir este item pois ele está sendo usado em uma aula agendada.";
+            } else {
+                 $_SESSION['mensagem'] = "Erro ao excluir: " . $e->getMessage();
+            }
             $_SESSION['mensagem_tipo'] = 'erro';
         }
     }
@@ -84,7 +84,7 @@ try {
             $aba_ativa = 'aulas';
             $titulo_aba = 'Aulas Agendadas';
             $itens_para_excluir = $conn->query(
-                "SELECT a.id, a.data_aula, t.nome_turma, p.nome AS nome_professor 
+                "SELECT a.id, a.data_aula, t.nome_turma, p.nome AS nome_professor, p.unidade_curricular 
                  FROM aulas a 
                  JOIN turmas t ON a.turma_id = t.id 
                  JOIN professores p ON a.professor_id = p.id 
@@ -132,7 +132,7 @@ try {
             <table>
                 <thead>
                     <?php if ($aba_ativa == 'aulas'): ?>
-                        <tr><th>Data</th><th>Turma</th><th>Professor</th><th>Ação</th></tr>
+                        <tr><th>Data</th><th>Turma</th><th>Professor</th><th>Unidade Curricular</th><th>Ação</th></tr>
                     <?php elseif ($aba_ativa == 'salas'): ?>
                         <tr><th>Nº Sala</th><th>Bloco</th><th>Ação</th></tr>
                     <?php else: // Professores e Turmas ?>
@@ -147,6 +147,7 @@ try {
                                 <td><?= htmlspecialchars(date('d/m/Y', strtotime($item['data_aula']))); ?></td>
                                 <td><?= htmlspecialchars($item['nome_turma']); ?></td>
                                 <td><?= htmlspecialchars($item['nome_professor']); ?></td>
+                                <td><?= htmlspecialchars($item['unidade_curricular']); ?></td>
                             <?php elseif ($aba_ativa == 'salas'): ?>
                                 <td><?= htmlspecialchars($item['numero_sala']); ?></td>
                                 <td><?= htmlspecialchars($item['bloco']); ?></td>
@@ -177,3 +178,4 @@ try {
         <?php endif; ?>
     </div>
 </main>
+
