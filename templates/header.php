@@ -21,7 +21,7 @@ include_once("helpers/url.php");
     <script src="<?= $BASE_URL ?>script.js"></script>
     <header class="site-header">
         <div class="header-container">
- <h1 class="site-title">NETNÚCLEO - HORTO</h1>
+<a href="home"  style=" text-decoration: none;"> <h1 class="site-title" >NETNÚCLEO - HORTO</h1></a>
         </div>
 
 <?php if (isset($_SESSION["usuario"])): ?>
