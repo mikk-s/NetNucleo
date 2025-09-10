@@ -32,6 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stmt->bindParam(":nome", $nome);
 
     if ($stmt->execute()) {
+        $_SESSION["erro"] = "Usuario criado com sucesso! Por favor, faça o login.";
         header("Location: login.php");
         exit();
     } else {

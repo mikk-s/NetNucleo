@@ -21,7 +21,7 @@ include_once("helpers/url.php");
     <script src="<?= $BASE_URL ?>script.js"></script>
     <header class="site-header">
         <div class="header-container">
-<a href="home"  style=" text-decoration: none;"> <h1 class="site-title" >NETNÚCLEO - HORTO</h1></a>
+ <h1 class="site-title">NETNÚCLEO - HORTO</h1>
         </div>
 
 <?php if (isset($_SESSION["usuario"])): ?>
@@ -40,8 +40,12 @@ include_once("helpers/url.php");
  <a href="<?=$BASE_URL ?>cadastrar_turma.php">Turmas</a>
  </div>
  </li>
- <li class="SairButton">
- <a href="<?= $BASE_URL ?>consulta_geral.php"> <p>Consultas</p></a>
+ <li class="VisButton">
+    <p>Consultas</p>
+    <div class="dropdown-content2">
+        <a href="<?= $BASE_URL ?>consulta_geral.php">Consulta Geral</a>
+        <a href="<?= $BASE_URL ?>relatorio">Relatório Geral</a>
+    </div>
  </li>
 
  
